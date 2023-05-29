@@ -384,6 +384,8 @@ class Figure(FigureBase):
         n: int = ...,
         timeout: float = ...,
         show_clicks: bool = ...,
+        x_conv: Callable = ...,
+        y_conv: Callable = ...,
         mouse_add: MouseButton = ...,
         mouse_pop: MouseButton = ...,
         mouse_stop: MouseButton = ...,

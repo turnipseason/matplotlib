@@ -3364,6 +3364,8 @@ None}, default: None
             self.canvas.print_figure(fname, **kwargs)
 
     def ginput(self, n=1, timeout=30, show_clicks=True,
+               x_conv=None,
+               y_conv=None,
                mouse_add=MouseButton.LEFT,
                mouse_pop=MouseButton.RIGHT,
                mouse_stop=MouseButton.MIDDLE):
@@ -3415,6 +3417,12 @@ None}, default: None
         clicks = []
         marks = []
 
+        def _conv(inp, func):
+            if func == "x_func":
+                return x_conv(inp) if x_conv else inp
+            elif func == "y_func":
+                return y_conv(inp) if y_conv else inp
+
         def handler(event):
             is_button = event.name == "button_press_event"
             is_key = event.name == "key_press_event"
@@ -3437,7 +3445,8 @@ None}, default: None
                   # On macOS/gtk, some keys return None.
                   or is_key and event.key is not None):
                 if event.inaxes:
-                    clicks.append((event.xdata, event.ydata))
+                    clicks.append((_conv(event.xdata, "x_func"),
+                                   _conv(event.ydata, "y_func")))
                     _log.info("input %i: %f, %f",
                               len(clicks), event.xdata, event.ydata)
                     if show_clicks:
